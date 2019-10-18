@@ -1,2 +1,2 @@
 # radmc-gala
-MCMC fitting of optically thin 3D disk models to interferometric visibilities
+MCMC fitting of optically thin 3D dustdisk models to interferometric visibilities
