@@ -12,6 +12,8 @@
 import numpy as np
 import pickle
 import os
+
+#Read in imaging parameters
 sourcetag,workingdir,vis,nvis,mosaic,phasecenter,weighting,robust,uvtaper,interactive = pickle.load(open('./imagepars.npy','rb'))
 sourcetag=sourcetag.encode('ascii')
 workingdir=workingdir.encode('ascii')
@@ -21,6 +23,9 @@ weighting=weighting.encode('ascii')
 robust=robust.encode('ascii')
 uvtaper=[x.encode('ascii') for x in uvtaper]
 
+#Read in pixel parameters
+dxy, nxy = pickle.load(open('../calibratedms/pixinfo.npy','rb'))
+#Figure ou
 
 #print(workingdir)
 #Run this within imaging folder
@@ -34,6 +39,9 @@ else:
     weightfacts=[1.0 for x in np.arange(len(vis))]
     imageconcat=True
     imagesingles=True
+    #Figure out pix size and number for concatenated image.
+    dxyconc=np.min(dxy)
+    nxyconc=np.int(np.ceil(np.max(dxy*nxy)/dxyconc/2.0)*2)
 
 if concaten:
     os.system('rm -r '+concatvis)
@@ -45,8 +53,8 @@ if concaten:
 if imageconcat:
     imagename=concatvis[16:-3]+'_'+weighting+robust
     #clean parameters
-    imsize=[512,512]
-    cell=['0.05arcsec']
+    imsize=[nxyconc, nxyconc]
+    cell=[str(dxyconc*180.0/np.pi*3600.0)+'arcsec']
     pblimit=1e-5
     if mosaic:
         gridder='mosaic'
@@ -75,8 +83,8 @@ if imageconcat:
 if imagesingles:
     for i in np.arange(nvis):
         imagename=vis[i][:-3]+'_'+weighting+robust
-        imsize=[1024,1024]
-        cell=['0.05arcsec']
+        imsize=[nxy[i],nxy[i]]
+        cell=[str(dxy[i]*180.0/np.pi*3600.0)+'arcsec']
         pblimit=1e-5
         gridder='standard'
         deconvolver='multiscale'
