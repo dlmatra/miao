@@ -10,10 +10,3 @@ Standard usage of ``emcee`` involves instantiating an
 
 .. autoclass:: emcee.EnsembleSampler
    :inherited-members:
-
-Note that several of the :class:`EnsembleSampler` methods return or consume
-:class:`State` objects:
-
-.. autoclass:: emcee.State
-   :inherited-members:
-

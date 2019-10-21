@@ -12,14 +12,14 @@ def get_sampler(backendaddress):
     os.environ["OMP_NUM_THREADS"] = "1"
     import astropy.io.fits as pf
     import uuid
+    import pickle
     from galario.double import chi2Image, sampleImage, threads, get_image_size, sweep
     threads(1)
 
     c = 299792458.0
 
     #Import fit parameters printed within main.py
-    pbfilenames,vis,nvis,radmcgalapath,workingdir,sourcetag,Lstar,dist,imsize,useh,star,
-                 ngal(",resolved,", "pars_init,", "priors_dwn,", "priors_up", "=", "pickle.load(open('./fitpars.npy','rb'))")
+    pbfilenames,vis,nvis,radmcgalapath,workingdir,sourcetag,Lstar,dist,imsize,useh,star,ngal,resolved, pars_init, priors_dwn, priors_up = pickle.load(open('./fitpars.npy','rb'))
     rmid_init=pars_init[1]
     sigma_init=pars_init[2]
         
@@ -31,7 +31,7 @@ def get_sampler(backendaddress):
     #Import necessary scripts and libraries within radmc-gala
     os.sys.path.append(radmcgalapath+'/utils')
     import problem_setup_cont_gauss
-    os.sys.path.append(radmcgalapath+'/src')
+    os.sys.path.append(radmcgalapath+'/emcee')
     import emcee3
     os.sys.path.append(radmcgalapath+'/radmc-3d/version_0.41/python')
     import radmc3dPy
@@ -114,9 +114,9 @@ def get_sampler(backendaddress):
     w=[[] for x in vis]
     pbpad=[[] for x in vis]
     for i in np.arange(nvis):
-        u[i], v[i], Re[i], Im[i], w[i] = np.load(vis[i][:-3]+'.npy')
+        u[i], v[i], Re[i], Im[i], w[i] = np.load('../calibratedms/'+vis[i][:-3]+'.npy')
         #Import primary beam (pb) to take its effect into account in the model fitting. 
-        pbcov, header_pbcov = pf.getdata(pbfilenames[i],0, header=True)
+        pbcov, header_pbcov = pf.getdata('../imaging/'+pbfilenames[i],0, header=True)
         #CASA images come as 4D cubes (polarization, frequency, spatial y (north-south) direction, spatial x (east-west) 
         #direction).
         #In the case of dust continuum images we have no polarization or frequency, so removing those dimensions below
@@ -143,11 +143,11 @@ def get_sampler(backendaddress):
             
             #Set up Gaussian radial profile function for bkg galaxy 
             def GaussianProfileGalaxy(f0, sigma, Rmin, dR, nR):
-            sigma *= arcsec
-            Rmin *= arcsec
-            dR *= arcsec
-            R = np.linspace(Rmin, Rmin + dR*nR, nR, endpoint=False)
-            return f0 * np.exp(-0.5*(R/sigma)**2.0)
+                sigma *= arcsec
+                Rmin *= arcsec
+                dR *= arcsec
+                R = np.linspace(Rmin, Rmin + dR*nR, nR, endpoint=False)
+                return f0 * np.exp(-0.5*(R/sigma)**2.0)
 
     
     #Function that defines likelihood function and multiplies it by the function computing the prior (defined further below).

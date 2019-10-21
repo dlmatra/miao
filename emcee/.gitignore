@@ -15,6 +15,3 @@ docs.tar
 *.pdf
 
 .coverage
-.pytest_cache
-htmlcov
-emcee_version.py

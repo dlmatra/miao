@@ -12,7 +12,7 @@ Walkers are the members of the ensemble. They are almost like separate
 Metropolis-Hastings chains but, of course, the proposal distribution for
 a given walker depends on the positions of all the other walkers in the
 ensemble. See `Goodman & Weare (2010)
-<https://msp.org/camcos/2010/5-1/p04.xhtml>`_ for more details.
+<http://msp.berkeley.edu/camcos/2010/5-1/p04.xhtml>`_ for more details.
 
 
 How should I initialize the walkers?

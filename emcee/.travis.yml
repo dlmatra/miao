@@ -1,29 +1,39 @@
 sudo: false
-dist: xenial
-language: python
-matrix:
-  fast_finish: true
-cache:
-  directories:
-  - "$HOME/.cache/pip"
+language: generic
+dist: trusty
 
-python:
-  - "3.6"
-  - "3.7"
-env:
-  - NUMPY_VERSION=1.17
-  - NUMPY_VERSION=1.16
-  - NUMPY_VERSION=1.15
+matrix:
+    include:
+
+        # Linux, Python 2.7
+        - os: linux
+          env: PYTHON_VERSION=2.7 NUMPY_VERSION=1.10
+        - os: linux
+          env: PYTHON_VERSION=2.7 NUMPY_VERSION=1.11
+        - os: linux
+          env: PYTHON_VERSION=2.7 NUMPY_VERSION=1.12
+
+        # Linux, Python 3.5
+        - os: linux
+          env: PYTHON_VERSION=3.5 NUMPY_VERSION=1.12
+
+        # Linux, Python 3.6
+        - os: linux
+          env: PYTHON_VERSION=3.6 NUMPY_VERSION=1.11
+        - os: linux
+          env: PYTHON_VERSION=3.6 NUMPY_VERSION=1.12
+
+        # OSX
+        - os: osx
+          env: PYTHON_VERSION=2.7 NUMPY_VERSION=1.12
+        - os: osx
+          env: PYTHON_VERSION=3.6 NUMPY_VERSION=1.12
 
 install:
-  - travis_retry pip install --upgrade pip
-  - travis_retry pip install --upgrade setuptools setuptools_scm
-  - travis_retry pip install --upgrade numpy==$NUMPY_VERSION
-  - travis_retry pip install --upgrade -r requirements-dev.txt
-  - travis_retry python setup.py develop
+    - source .ci/travis.sh
 
 script:
-  - pytest -v src/emcee/tests --cov emcee
+    - py.test -v --cov emcee
 
 after_success:
-  - coveralls
+    - coveralls
