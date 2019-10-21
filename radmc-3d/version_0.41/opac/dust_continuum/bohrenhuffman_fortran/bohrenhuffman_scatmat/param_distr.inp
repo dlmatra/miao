@@ -1,0 +1,8 @@
+pyrmg70     ; Name of the grain, referring to the file pyrmg70.lnk
+10          ; Nr of grain sizes in this distribution
+0.75d-4     ; Minimal grain radius in cm
+1.50d-4     ; Maximal grain radius in cm
+-3.5        ; Grain size distribution powerlaw p such that n(a)da ~ a^p
+3.0d0       ; Material density in gram/cm^3
+181         ; Nr of angle sampling points between 0 and 180
+0.1         ; Error tolerance for testing kappa_scat = 2 pi int_{-1}^{+1} Z_11(mu) dmu

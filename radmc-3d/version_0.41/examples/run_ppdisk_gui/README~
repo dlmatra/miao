@@ -1,0 +1,17 @@
+This is a model of a protoplanetary disk. It has a graphical user interface
+for the setup:
+
+   radmc3d_gui.pro
+
+This is what you should do to run this model:
+
+  1) Make sure you have compiled the main radmc3d code in src/ already.
+     See manual for how to compile.
+  2) Go into IDL and type:
+      .r radmc3d
+      radmc3d
+      and you should get a large control panel. 
+  3) The rest should be self-explanatory.
+
+CREDITS: This GUI is created by Attila Juhasz, MPIA 2010.
+
