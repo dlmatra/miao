@@ -266,7 +266,7 @@ def lnpostfn(p, locfiles=None):
     
     chi2=[[] for x in vismodel]
     lnL=lnprior
-    for i in np.arange(len(chi2)):
+    for i in np.arange(vismodel):
         chi2[i]=np.sum(((np.real(vismodel[i])-Re[i])**2.0+(np.imag(vismodel[i])-Im[i])**2.0)*w[i])
         lnL+=-0.5*(chi2[i]*warr[i] + np.sum(2.0*np.log(2.0*np.pi/warr[i]/w[i])))
 
