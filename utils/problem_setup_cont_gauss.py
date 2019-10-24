@@ -1,6 +1,12 @@
 #!/usr/bin/env python
 # coding: utf-8
 
+# In[ ]:
+
+
+#!/usr/bin/env python
+# coding: utf-8
+
 # In[1]:
 
 
@@ -100,7 +106,7 @@ def problem_setup(theta):
         for j in range(tc.size):
             
             #HERE USE VERTICAL GAUSSIAN:
-            rhod[i,j]    = np.exp(-(rc[i]*np.sin(((np.pi/2e0)-tc[j]))/(np.sqrt(2.0)*H[i]))**2e0)/(np.sqrt(2.0*np.pi)*H[i])        
+            rhod[i,j]    = surfmassdens[i]*np.exp(-(rc[i]*np.sin(((np.pi/2e0)-tc[j]))/(np.sqrt(2.0)*H[i]))**2e0)/(np.sqrt(2.0*np.pi)*H[i])        
         
 
     #

@@ -36,8 +36,8 @@ os.sys.path.append(radmcgalapath+'/utils')
 import problem_setup_cont_gauss
 import importlib
 importlib.reload(problem_setup_cont_gauss)
-os.sys.path.append(radmcgalapath+'/emcee')
-import emcee3
+#os.sys.path.append(radmcgalapath+'/emcee')
+import emcee
 os.sys.path.append(radmcgalapath+'/radmc-3d/version_0.41/python')
 import radmc3dPy
 
@@ -197,7 +197,7 @@ def lnpostfn(p, locfiles=None):
     
     # Run
     os.system(radmcgalapath+'/radmc-3d/version_0.41/srcnoprint/radmc3d image lambda '+str(wav)+' incl '+str(p[3])+
-              ' posang '+str(90.0+p[4])+' sizeau '+str(sizeau)+' npix '+str(npix)+' imageunform nostar')
+              ' posang '+str(-p[4])+' sizeau '+str(sizeau)+' npix '+str(npix)+' imageunform nostar')
     # Read
     imag     =     radmc3dPy.image.readImage(binary=True)
 
@@ -329,10 +329,11 @@ pos = [p0 + np.asarray([0.1]*ndim)*np.asarray(p0)*np.random.randn(ndim) for i in
 
 # Define 'backend' which is practically a file which holds the result of the MCMC computation AS IT IS RUNNING.
 # This ensures we can recover the result not only in the future, but also if something goes wrong and the MCMC crashes
-backend=emcee3.backends.HDFBackend(backendaddress)
+backend=emcee.backends.HDFBackend(backendaddress)
 # This command wipes what's currently stored in the backend opened above - so make sure you don't use this command on a backend 
 # containing something important!
-backend.reset(nwalkers,ndim)
+if newbackend:
+    backend.reset(nwalkers,ndim)
 
 #import the Pool function which allows the computation to be distributed amongst different cores of the machine we are running on,
 #saving a considerable amount of time.
@@ -342,5 +343,5 @@ from multiprocessing import Pool
 # Define object of EnsembleSampler class from emcee package. Basically this is the object the computation gets run onto.
 # See https://emcee.readthedocs.io/en/latest for a full description of the object, what function/parameters it has, and
 # in general how the MCMC fit works.
-sampler = emcee3.EnsembleSampler(nwalkers, ndim, lnpostfn, pool=Pool(), backend=backend)#, pool=Pool())
+sampler = emcee.EnsembleSampler(nwalkers, ndim, lnpostfn, pool=Pool(), backend=backend)#, pool=Pool())
 
