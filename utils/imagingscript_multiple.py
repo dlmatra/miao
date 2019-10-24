@@ -9,6 +9,17 @@
 # In[ ]:
 
 
+#!/usr/bin/env python
+# coding: utf-8
+
+# ## Carry out imaging in CASA 
+# given parameters in imagepars.npy file, which were fed by the main.py routine
+# 
+# Needs to be run within imaging folder in the presence of imagepars.npy
+
+# In[ ]:
+
+
 import numpy as np
 import pickle
 import os
@@ -59,7 +70,7 @@ if imageconcat:
     deconvolver='multiscale'
     #Scales should be roughly [0, n where n*cell~expected syntesized beam size, 3n, 9n, etc.]
     scales=[0,10,30,90]
-    niter=100000000000000
+    niter=1
     specmode='mfs'
     
     #Remove image if it exists
@@ -86,7 +97,7 @@ if imagesingles:
         deconvolver='multiscale'
         #Scales should be roughly [0, n where n*cell~expected syntesized beam size, 3n, 9n, etc.]
         scales=[0,10,30,90]
-        niter=100000000000000
+        niter=1
         specmode='mfs'
         if robust=='':
             robusttask=0.5
@@ -108,6 +119,12 @@ if imagesingles:
         viewer(imagename+'.image')
 
         #RMS X uJy for X" taper, beam X" x X" @Xdeg PA
+
+
+# In[ ]:
+
+
+
 
 
 # In[ ]:
