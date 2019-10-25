@@ -18,14 +18,7 @@ threads(1)
 #backendaddress=np.load('./backendaddress.npy')
 backendaddress = pickle.load(open('backendaddress.npy','rb'))
 
-
 c = 299792458.0
-
-#Import fit parameters printed within main.py
-pbfilenames,vis,nvis,radmcgalapath,workingdir,sourcetag,Lstar,dist,imsize,useh,star,ngal,resolved, pars_init, priors_dwn, priors_up = pickle.load(open('./fitpars.npy','rb'))
-rmid_init=pars_init[1]
-sigma_init=pars_init[2]
-    
 
 #Import pixel and image sizes needed by galario
 dxy, nxy = pickle.load(open('../calibratedms/pixinfo.npy','rb')) #NB dxy in radians
@@ -40,6 +33,92 @@ importlib.reload(problem_setup_cont_gauss)
 import emcee
 os.sys.path.append(radmcgalapath+'/radmc-3d/version_0.41/python')
 import radmc3dPy
+
+#Now define array containing all initial parameters, as defined in vismodelling code.
+## NB DO NOT MODIFY ORDER AS OTHERWISE CODE BELOW WILL NOT RECOGNISE PARAMETERS CORRECTLY
+if postprocessing:
+    Lstar, dist, imsize, useh, star, nvis, ngal, pars_init, labels, labelparams, priors_dwn, priors_up = pickle.load(open('parsandpriors.npy','rb')) #NB dxy in radians
+else:
+    pars_init=[fluxdensity, rmid, sigma, incl, posang]
+    labelparams=[r"$F_{\nu_{\rm belt}}$ (Jy)", r"$R$ ('')", r"$\sigma R$ ('')", r"$i$ ($^{o}$)", r"PA ($^{o}$)"]
+    labels=['fnu', 'r', 'sigr', 'i', 'pa']
+    priors_dwn=[fluxdensity_dwn, rmid_dwn, sigma_dwn, incl_dwn, posang_dwn]
+    priors_up=[fluxdensity_up, rmid_up, sigma_up, incl_up, posang_up]
+    if useh:
+        pars_init.append(h)
+        labelparams.append(r'$h$')
+        labels.append('h')
+        priors_dwn.append(h_dwn)
+        priors_up.append(h_up)
+    if star:
+        pars_init.append(fstar)
+        labelparams.append(r'$F_{\nu_{\ast}}$ (Jy)')
+        labels.append('fnustar')
+        priors_dwn.append(fstar_dwn)
+        priors_up.append(fstar_up)
+    for i in np.arange(nvis):
+        pars_init.append(dRA[i])
+        labelparams.append(r"$\Delta$RA$_"+str(i)+"$ ('')")
+        labels.append('deltara_'+str(i))
+        priors_dwn.append(dRA_dwn[i])
+        priors_up.append(dRA_up[i])
+        pars_init.append(dDec[i])
+        labelparams.append(r"$\Delta$Dec$_"+str(i)+"$ ('')")
+        labels.append('deltadec_'+str(i))
+        priors_dwn.append(dDec_dwn[i])
+        priors_up.append(dDec_up[i])
+        pars_init.append(wtfact[i])
+        labelparams.append(r"w$_"+str(i)+"$")
+        labels.append('w_'+str(i))
+        priors_dwn.append(wtfact_dwn[i])
+        priors_up.append(wtfact_up[i])
+    if ngal>=1:
+        for i in np.arange(ngal):
+            pars_init.append(fbkg[i])
+            labelparams.append(r"$F_{\rm bkg"+str(i)+"}$ (mJy)")
+            labels.append('fbkg_'+str(i))
+            priors_dwn.append(fbkg_dwn[i])
+            priors_up.append(fbkg_up[i])
+            pars_init.append(dRAbkg[i])
+            labelparams.append(r"$\Delta$RA$_{\rm bkg"+str(i)+"}$ ('')")
+            labels.append('deltarabkg_'+str(i))
+            priors_dwn.append(dRAbkg_dwn[i])
+            priors_up.append(dRAbkg_up[i])
+            pars_init.append(dDecbkg[i])
+            labelparams.append(r"$\Delta$Dec$_{\rm bkg"+str(i)+"}$ ('')")
+            labels.append('deltadecbkg_'+str(i))
+            priors_dwn.append(dDecbkg_dwn[i])
+            priors_up.append(dDecbkg_up[i])
+            if resolved[i]:
+                pars_init.append(sigmagal[i])
+                labelparams.append(r"$\sigma_{\rm bkg"+str(i)+"}$ ('')")
+                labels.append('sigmabkg_'+str(i))
+                priors_dwn.append(sigmagal_dwn[i])
+                priors_up.append(sigmagal_up[i])
+                pars_init.append(PAgal[i])
+                labelparams.append(r"$PA_{\rm bkg"+str(i)+"}$ ($^{o}$)")
+                labels.append('pabkg_'+str(i))
+                priors_dwn.append(PAgal_dwn[i])
+                priors_up.append(PAgal_up[i])
+                pars_init.append(incgal[i])
+                labelparams.append(r"$i_{\rm bkg"+str(i)+"}$ ($^{o}$)")
+                labels.append('ibkg_'+str(i))
+                priors_dwn.append(incgal_dwn[i])
+                priors_up.append(incgal_up[i])
+    pickle.dump([Lstar, dist, imsize, useh, star, nvis, ngal, pars_init, labels, labelparams, priors_dwn, priors_up], open('parsandpriors.npy', 'wb'), protocol=2)            
+    
+rmid_init=pars_init[1]
+sigma_init=pars_init[2]
+
+
+
+#Predict names of primary beam files according to standard naming convention
+sourcetag,workingdir,vis,nvis,mosaic,phasecenter,weighting,robust,uvtaper,interactive = pickle.load(open('../imaging/imagepars.npy','rb'))
+pbfilenames=[[] for x in vis]
+for i in np.arange(nvis):
+    pbfilenames[i]=vis[i][:-3]+'_'+weighting+robust+'_pb.fits'
+
+
 
 #### SYSTEM-SPECIFIC INPUTS ####
 tag=sourcetag
@@ -265,6 +344,7 @@ def lnpostfn(p, locfiles=None):
                 countpars+=3  
     
     chi2=[[] for x in vismodel]
+    
     lnL=lnprior
     for i in np.arange(len(chi2)):
         chi2[i]=np.sum(((np.real(vismodel[i])-Re[i])**2.0+(np.imag(vismodel[i])-Im[i])**2.0)*w[i])
@@ -272,16 +352,22 @@ def lnpostfn(p, locfiles=None):
 
     # Here print useful things if needed for postprocessing, as described above
     if locfiles:
-        warr=[wtfact]
+        warr=warr
         np.save('../'+locfiles+'/warr.npy', warr)
-        Re_resid=Re-vismodel.real
-        Im_resid=Im-vismodel.imag
-        np.save('../'+locfiles+'/'+tag+'_uvtable_model.npy', [u, v, vismodel.real, vismodel.imag, w])
-        np.save('../'+locfiles+'/'+tag+'_uvtable_resid.npy', [u, v, Re_resid, Im_resid, w])
-        np.save('../'+locfiles+'/bestfitshiftPAinc_rad.npy', [incl*np.pi/180.0, posang*np.pi/180.0, dRArad, dDecrad])
+        Re_resid=[[] for x in vis]
+        Im_resid=[[] for x in vis]
+        for i in np.arange(nvis):
+            Re_resid[i]=Re[i]-vismodel[i].real
+            Im_resid[i]=Im[i]-vismodel[i].imag
+            np.save('../'+locfiles+'/'+sourcetag+'_uvtable_model'+str(i)+'.npy', [u[i], v[i], vismodel[i].real, vismodel[i].imag, w[i]])
+            np.save('../'+locfiles+'/'+tag+'_uvtable_resid'+str(i)+'.npy', [u[i], v[i], Re_resid[i], Im_resid[i], w[i]])
+            np.save('../'+locfiles+'/bestfitshiftPAinc_rad'+str(i)+'.npy', [p[3]*np.pi/180.0, p[4]*np.pi/180.0, dRArad[i], dDecrad[i]])
         os.chdir('..')
         os.system('rm -r '+ciao)
-        return modpad, pxsz, -0.5*(chi2*wtfact) #-0.5*(chi2*wtfact + np.sum(2.0*np.log(2.0*np.pi/wtfact/w)))
+        lnLnonorm=0.0
+        for i in np.arange(len(chi2)):
+            lnLnonorm+=-0.5*(chi2[i]*warr[i])      
+        return modpad, dxyarcsec, lnLnonorm #-0.5*(chi2*wtfact + np.sum(2.0*np.log(2.0*np.pi/wtfact/w)))
 
 
     os.chdir('..')
