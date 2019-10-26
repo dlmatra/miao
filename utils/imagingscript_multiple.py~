@@ -6,7 +6,7 @@
 # 
 # Needs to be run within imaging folder in the presence of imagepars.npy
 
-# In[2]:
+# In[ ]:
 
 
 #!/usr/bin/env python
@@ -24,18 +24,12 @@ import numpy as np
 import pickle
 import os
 
-#Read in imaging parameters
-sourcetag,workingdir,vis,nvis,mosaic,phasecenter,weighting,robust,uvtaper,interactive = pickle.load(open('./imagepars.npy','rb'))
-sourcetag=sourcetag.encode('ascii')
-workingdir=workingdir.encode('ascii')
-vis=[x.encode('ascii') for x in vis]
-phasecenter=phasecenter.encode('ascii')
-weighting=weighting.encode('ascii')
-robust=robust.encode('ascii')
-uvtaper=[x.encode('ascii') for x in uvtaper]
+#Read in data parameters
+radmcgalapath, casapath, sourcetag, workingdir, vis, nvis = pickle.load(open('../dirvises.npy','rb'))
+
 
 #Read in pixel parameters
-dxy, nxy = pickle.load(open(workingdir+'/'+sourcetag+'/calibratedms/pixinfo.npy','rb'))
+dxy, nxy = pickle.load(open('../calibratedms/pixinfo.npy','rb'))
 
 #print(workingdir)
 #Run this within imaging folder
@@ -90,7 +84,6 @@ if imageconcat:
 if imagesingles:
     for i in np.arange(nvis):
         imagename=vis[i][:-3]+'_'+weighting+robust
-        #print(imagename)
         imsize=[nxy,nxy]
         cell=[str(dxy*180.0/np.pi*3600.0)+'arcsec']
         pblimit=1e-5
@@ -107,7 +100,6 @@ if imagesingles:
         os.system('rm -r '+imagename+'.*')
 
         #Run iterative tclean with manual masking
-        #print(workingdir+'/'+sourcetag+'/'+'calibratedms/'+vis[i])
         tclean(vis=workingdir+'/'+sourcetag+'/'+'calibratedms/'+vis[i], interactive=interactive, imsize=imsize, cell=cell,
                weighting=str(weighting), niter=niter, specmode=specmode, gridder=gridder, deconvolver=deconvolver, scales=scales, 
                imagename=str(imagename), uvtaper=uvtaper,  robust=robusttask)
