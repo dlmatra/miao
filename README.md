@@ -1,5 +1,5 @@
 ## MIAO - Modelling Interferometric Array Observations
-CASA imaging and MCMC fitting of interferometric visibilities using optically thin 3D disk models
+CASA imaging and MCMC fitting of interferometric visibilities using - for now - optically thin 3D ring models
 
 **Instructions**: 
 Bringing your data from archive to paper-ready plots requires several steps, which should be followed and executed within the 4 Notebooks in the tutorial folder, which will guide us, respectively, through imaging, visibility modelling, postprocessing and final plotting. It is probably a good idea to follow these in order, even if, for example, you have already carried out your own imaging elsewhere.
