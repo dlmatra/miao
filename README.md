@@ -5,6 +5,8 @@ CASA imaging and MCMC fitting of interferometric visibilities using optically th
 Bringing your data from archive to paper-ready plots requires several steps, which should be followed and executed within the 4 Notebooks in the tutorial folder, which will guide us, respectively, through imaging, visibility modelling, postprocessing and final plotting. It is probably a good idea to follow these in order, even if, for example, you have already carried out your own imaging elsewhere.
 As well as **installing the required packages** below, it is also a good idea (to keep things tidy) to create a new folder for the target you are modelling, and copy the tutorial folder of this package within them, so you can execute things from there.
 
+**NOTE**:
+This has been tested on single-dataset analysis, and not yet on multiple-dataset analysis. **Use at own risk!**
 
 
 
