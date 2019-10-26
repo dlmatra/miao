@@ -24,14 +24,14 @@ c = 299792458.0
 dxy, nxy = pickle.load(open('../calibratedms/pixinfo.npy','rb')) #NB dxy in radians
 dxyarcsec=dxy*180.0/np.pi*3600.0
 
-#Import necessary scripts and libraries within radmc-gala
-os.sys.path.append(radmcgalapath+'/utils')
+#Import necessary scripts and libraries within miao
+os.sys.path.append(miaopath+'/utils')
 import problem_setup_cont_gauss
 import importlib
 importlib.reload(problem_setup_cont_gauss)
-#os.sys.path.append(radmcgalapath+'/emcee')
+#os.sys.path.append(miaopath+'/emcee')
 import emcee
-os.sys.path.append(radmcgalapath+'/radmc-3d/version_0.41/python')
+os.sys.path.append(miaopath+'/radmc-3d/version_0.41/python')
 import radmc3dPy
 
 #Now define array containing all initial parameters, as defined in vismodelling code.
@@ -275,7 +275,7 @@ def lnpostfn(p, locfiles=None):
     ##############
     
     # Run
-    os.system(radmcgalapath+'/radmc-3d/version_0.41/srcnoprint/radmc3d image lambda '+str(wav)+' incl '+str(p[3])+
+    os.system(miaopath+'/radmc-3d/version_0.41/srcnoprint/radmc3d image lambda '+str(wav)+' incl '+str(p[3])+
               ' posang '+str(-p[4])+' sizeau '+str(sizeau)+' npix '+str(npix)+' imageunform nostar')
     # Read
     imag     =     radmc3dPy.image.readImage(binary=True)

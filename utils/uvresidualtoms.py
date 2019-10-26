@@ -4,8 +4,8 @@ import os
 import pickle
 
 #Read in data parameters; THIS ASSUMES YOU ARE IN THE UVFIT FOLDER
-radmcgalapath, casapath, sourcetag, workingdir, vis, nvis = pickle.load(open('../dirvises.npy','rb'))
-radmcgalapath=radmcgalapath.encode('ascii')
+miaopath, casapath, sourcetag, workingdir, vis, nvis = pickle.load(open('../dirvises.npy','rb'))
+miaopath=miaopath.encode('ascii')
 sourcetag=sourcetag.encode('ascii')
 vis=[x.encode('ascii') for x in vis]
 workingdir=workingdir.encode('ascii')
