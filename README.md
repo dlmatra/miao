@@ -1,9 +1,23 @@
-# radmc-gala
+## radmc-gala
 CASA imaging and MCMC fitting of interferometric visibilities using optically thin 3D disk models
 
-Bringing your data from archive to paper-ready plots requires several steps, which we will follow and execute in a series of Notebooks. Built in **Python 3.7.3 and with CASA 5.4.0**, but is likely to handle other versions.
+**Instructions**: 
+Bringing your data from archive to paper-ready plots requires several steps, which should be followed and executed within the 4 Notebooks in the tutorial folder, which will guide us, respectively, through imaging, visibility modelling, postprocessing and final plotting. It is probably a good idea to follow these in order, even if, for example, you have already carried out your own imaging elsewhere.
+As well as **installing the required packages** below, it is also a good idea (to keep things tidy) to create a new folder for the target you are modelling, and copy the tutorial folder of this package within them, so you can execute things from there.
 
-**GALARIO package**:
+
+
+
+## Requirements
+
+Before getting started, here is a list of required packages for your Python installation, including versions that this code was tested with. The code was built in **Python 3.7.3**, but may handle other versions with some tweaks here and there. Required packages:
+
+**CASA**:
+https://casa.nrao.edu/casa_obtaining.shtml
+Needed for handling visibility data from interferometric observatories such as ALMA and the SMA.
+**Needs to be installed on your local machine**, and its /bin folder path specified within the first tutorial (imaging, Step 1) This code was tested with version 5.4.0.
+
+**galario**:
 https://github.com/mtazzari/galario
 **needs to be installed within local Python 3 installation**, e.g. with conda with a command like: 'conda install -c conda-forge galario'. This code was tested with version 1.2
 
