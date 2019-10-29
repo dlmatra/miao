@@ -328,8 +328,8 @@ def lnpostfn(p, locfiles=None):
                 imbkgonly = sweep(fgal, Rminrad, dRrad, nxy, dxy, inc=incgal)
                 for j in np.arange(nvis):
                     visbkg = sampleImage(imbkgonly*fbkg*
-                                         pbpad[j][np.int(pbpad.shape[0]/2.0+p[7+countpars]/pxsz), 
-                                               np.int(pbpad.shape[1]/2.0-p[6+countpars]/pxsz)]/np.sum(imbkgonly), 
+                                         pbpad[j][np.int(pbpad[j].shape[0]/2.0+p[7+countpars]/dxyarcsec), 
+                                               np.int(pbpad[j].shape[1]/2.0-p[6+countpars]/dxyarcsec)]/np.sum(imbkgonly), 
                                          dxy[j], u[j], v[j], PA=PAgal, dRA=dRAbkgrad+dRArad[j], dDec=dDecbkgrad+dDecrad[j])
                     vismodel[j]+=visbkg
                 countpars+=6
@@ -337,7 +337,7 @@ def lnpostfn(p, locfiles=None):
                 for j in np.arange(nvis):
                     #Then add bkg point source
                     visbkg=np.zeros(u[j].size, dtype=np.complex_)
-                    visbkg.real+=fbkg*pbpad[np.int(pbpad.shape[0]/2.0+p[7+countpars]/pxsz), np.int(pbpad.shape[1]/2.0-p[6+countpars]/pxsz)]
+                    visbkg.real+=fbkg*pbpad[j][np.int(pbpad[j].shape[0]/2.0+p[7+countpars]/dxyarcsec), np.int(pbpad[j].shape[1]/2.0-p[6+countpars]/dxyarcsec)]
                     #Phase shift bkg in the visibilities in the same way as model is being shifted by Galario.
                     theta = u[j]*2.0*np.pi*(dRAbkgrad+dRArad[j]) + v[j]*2.0*np.pi*(dDecbkgrad+dDecrad[j])
                     visbkg = (np.real(visbkg) + 1j*np.imag(visbkg)) * (np.cos(theta) + 1j*np.sin(theta))

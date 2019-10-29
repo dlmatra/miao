@@ -39,26 +39,26 @@ dxy, nxy = pickle.load(open(workingdir+'/'+sourcetag+'/calibratedms/pixinfo.npy'
 
 #print(workingdir)
 #Run this within imaging folder
-concatvis=workingdir+'/'+sourcetag+'/calibratedms/'+sourcetag+'_calibratedvis_cont_concat.ms'
-if not os.path.exists(concatvis):
-    concaten=False
-    imagesingles=True
-    imageconcat=False
-else:
+concatvis=sourcetag+'_calibratedvis_cont_concat.ms'
+if nvis>1:
     concaten=True
     weightfacts=[1.0 for x in np.arange(len(vis))]
     imageconcat=True
     imagesingles=True
+else:
+    concaten=False
+    imagesingles=True
+    imageconcat=False
 
 if concaten:
-    os.system('rm -r '+concatvis)
-    concat(vis=vis, concatvis=concatvis, visweightscale=weightfacts, copypointing=False)
+    os.system('rm -r '+workingdir+'/'+sourcetag+'/calibratedms/'+concatvis)
+    concat(vis=[workingdir+'/'+sourcetag+'/'+'calibratedms/'+x for x in vis], concatvis=workingdir+'/'+sourcetag+'/calibratedms/'+concatvis, visweightscale=weightfacts, copypointing=False)
     #If needed, manually fix coordinates to match coordinates of first observation, otherwise mosaic won't work. Phase centers are all aligned already from fit
     #fixplanets(vis=concatvis, field='0,1', direction='J2000 02h26m16.337489 +06d17m32.38948')
-    listobs(concatvis)
+    listobs(workingdir+'/'+sourcetag+'/calibratedms/'+concatvis)
 
 if imageconcat:
-    imagename=concatvis[16:-3]+'_'+weighting+robust
+    imagename=concatvis[:-3]+'_'+weighting+robust
     #clean parameters
     imsize=[nxy, nxy]
     cell=[str(dxy*180.0/np.pi*3600.0)+'arcsec']
@@ -72,12 +72,14 @@ if imageconcat:
     scales=[0,10,30,90]
     niter=1
     specmode='mfs'
+    if robust=='':
+        robusttask=0.5
     
     #Remove image if it exists
     os.system('rm -r '+imagename+'.*')
     
     #Run iterative tclean with manual masking
-    tclean(vis=concatvis, interactive=interactive, imsize=imsize, cell=cell, weighting=weighting, niter=niter, specmode=specmode, gridder=gridder, deconvolver=deconvolver, scales=scales, imagename=imagename, uvtaper=uvtaper,  robust=robust, pblimit=pblimit)
+    tclean(vis=workingdir+'/'+sourcetag+'/calibratedms/'+concatvis, interactive=interactive, imsize=imsize, cell=cell, weighting=weighting, niter=niter, specmode=specmode, gridder=gridder, deconvolver=deconvolver, scales=scales, imagename=imagename, uvtaper=uvtaper,  robust=robusttask, pblimit=pblimit)
     
     #Export image to FITS
     exportfits(imagename=imagename+'.image', fitsimage=imagename+'.fits', overwrite=True)
