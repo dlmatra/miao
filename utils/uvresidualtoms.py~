@@ -9,7 +9,6 @@ miaopath=miaopath.encode('ascii')
 sourcetag=sourcetag.encode('ascii')
 vis=[x.encode('ascii') for x in vis]
 workingdir=workingdir.encode('ascii')
-#print(vis)
 
 #Read in pixel parameters
 dxy, nxy = pickle.load(open('../calibratedms/pixinfo.npy','rb'))
@@ -29,7 +28,7 @@ for i in np.arange(nvis):
 	
 
 	msresiduals[i]=workingdir+'/'+sourcetag+'/calibratedms/'+sourcetag+'_calibratedvis_cont_'+str(i)+'_res.ms'
-	#viscur=msresiduals[i]
+	vis=msresiduals[i]
 	os.system('rm -r '+msresiduals[i])
 	shutil.copytree(msdata[i], msresiduals[i])
 
@@ -95,7 +94,7 @@ for i in np.arange(nvis):
 	
 	#Multiplying the weights by best-fit factor found in modelling
 	weights = tb.getcol("WEIGHT")
-	weights*=warr[i]
+	weights*=warr
 		
 	tb.putcol("DATA", data_array)
 	tb.putcol("WEIGHT", weights)
@@ -114,7 +113,7 @@ for i in np.arange(nvis):
 	tb.open(msmodel[i], nomodify=False)	
 	#Multiplying the weights by best-fit factor found in modelling
 	weights = tb.getcol("WEIGHT")
-	weights*=warr[i]
+	weights*=warr
 
 	visres=np.zeros(u.size).astype(complex)
 	visres.real=Re_mod
@@ -165,4 +164,3 @@ for i in np.arange(nvis):
 	tb.flush()
 	tb.close()
 print("Done! _res, _model, and _rwdat CASA MS files have been produced and placed in the ../../calibratedms directory")
-
