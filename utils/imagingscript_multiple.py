@@ -74,6 +74,8 @@ if imageconcat:
     specmode='mfs'
     if robust=='':
         robusttask=0.5
+    else:
+	robusttask=np.float(robust)
     
     #Remove image if it exists
     os.system('rm -r '+imagename+'.*')
@@ -104,6 +106,8 @@ if imagesingles:
         specmode='mfs'
         if robust=='':
             robusttask=0.5
+	else:
+	    robusttask=np.float(robust)
 
         #Remove image if it exists
         os.system('rm -r '+imagename+'.*')
