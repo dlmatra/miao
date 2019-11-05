@@ -31,7 +31,7 @@ workingdir=workingdir.encode('ascii')
 vis=[x.encode('ascii') for x in vis]
 phasecenter=phasecenter.encode('ascii')
 weighting=weighting.encode('ascii')
-#robust=robust.encode('ascii')
+robust=robust.encode('ascii')
 uvtaper=[x.encode('ascii') for x in uvtaper]
 
 #Read in pixel parameters
@@ -40,12 +40,6 @@ dxy, nxy = pickle.load(open(workingdir+'/'+sourcetag+'/calibratedms/pixinfo.npy'
 #print(workingdir)
 #Run this within imaging folder
 concatvis=sourcetag+'_calibratedvis_cont_concat.ms'
-if any('_res' in x for x in vis):
-    concatvis=sourcetag+'_calibratedvis_cont_concat_res.ms'
-if any('_model' in x for x in vis):   
-    concatvis=sourcetag+'_calibratedvis_cont_concat_model.ms'
-if any('_rwdat' in x for x in vis):   
-    concatvis=sourcetag+'_calibratedvis_cont_concat_rwdat.ms'
 if nvis>1:
     concaten=True
     weightfacts=[1.0 for x in np.arange(len(vis))]
@@ -75,7 +69,7 @@ if imageconcat:
         gridder='standard'
     deconvolver='multiscale'
     #Scales should be roughly [0, n where n*cell~expected syntesized beam size, 3n, 9n, etc.]
-    scales=[0,72,216,648]
+    scales=[0,10,30,90]
     niter=1
     specmode='mfs'
     if robust=='':
@@ -138,7 +132,6 @@ if imagesingles:
 
 
 # In[ ]:
-
 
 
 

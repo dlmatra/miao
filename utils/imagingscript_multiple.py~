@@ -31,7 +31,7 @@ workingdir=workingdir.encode('ascii')
 vis=[x.encode('ascii') for x in vis]
 phasecenter=phasecenter.encode('ascii')
 weighting=weighting.encode('ascii')
-robust=robust.encode('ascii')
+#robust=robust.encode('ascii')
 uvtaper=[x.encode('ascii') for x in uvtaper]
 
 #Read in pixel parameters
