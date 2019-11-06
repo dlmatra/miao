@@ -39,13 +39,10 @@ if ngal>=1:
 	
 
 print('Setting labels for ndim parameters')
-if useh:
-    labelssmall=[labelparams[[x for x in range(len(labels)) if labels[x]=='fnu'][0]], labelparams[[x for x in range(len(labels)) if labels[x]=='r'][0]], labelparams[[x for x in range(len(labels)) if labels[x]=='sigr'][0]], labelparams[[x for x in range(len(labels)) if labels[x]=='h'][0]], labelparams[[x for x in range(len(labels)) if labels[x]=='i'][0]], labelparams[[x for x in range(len(labels)) if labels[x]=='pa'][0]]]
-    correspondingparameterindicesforchain=[[x for x in range(len(labels)) if labels[x]=='fnu'][0],[x for x in range(len(labels)) if labels[x]=='r'][0],[x for x in range(len(labels)) if labels[x]=='sigr'][0],[x for x in range(len(labels)) if labels[x]=='h'][0],[x for x in range(len(labels)) if labels[x]=='i'][0],[x for x in range(len(labels)) if labels[x]=='pa'][0]]
-else:
-    labelssmall=[labelparams[[x for x in range(len(labels)) if labels[x]=='fnu'][0]], labelparams[[x for x in range(len(labels)) if labels[x]=='r'][0]], labelparams[[x for x in range(len(labels)) if labels[x]=='sigr'][0]], labelparams[[x for x in range(len(labels)) if labels[x]=='i'][0]], labelparams[[x for x in range(len(labels)) if labels[x]=='pa'][0]]]
-    correspondingparameterindicesforchain=[[x for x in range(len(labels)) if labels[x]=='fnu'][0],[x for x in range(len(labels)) if labels[x]=='r'][0],[x for x in range(len(labels)) if labels[x]=='sigr'][0],[x for x in range(len(labels)) if labels[x]=='i'][0],[x for x in range(len(labels)) if labels[x]=='pa'][0]]
-    
+
+labelssmall=[labelparams[[x for x in range(len(labels)) if labels[x]=='fnu'][0]], labelparams[[x for x in range(len(labels)) if labels[x]=='r'][0]], labelparams[[x for x in range(len(labels)) if labels[x]=='sigr'][0]], labelparams[[x for x in range(len(labels)) if labels[x]=='h'][0]], labelparams[[x for x in range(len(labels)) if labels[x]=='i'][0]], labelparams[[x for x in range(len(labels)) if labels[x]=='pa'][0]]]
+correspondingparameterindicesforchain=[[x for x in range(len(labels)) if labels[x]=='fnu'][0],[x for x in range(len(labels)) if labels[x]=='r'][0],[x for x in range(len(labels)) if labels[x]=='sigr'][0],[x for x in range(len(labels)) if labels[x]=='h'][0],[x for x in range(len(labels)) if labels[x]=='i'][0],[x for x in range(len(labels)) if labels[x]=='pa'][0]]
+
 
 ###########
 #make trace plots, select samples
@@ -135,5 +132,4 @@ matplotlib.rc('ytick.minor', width=2, size=4)
 matplotlib.rc('xtick', labelsize=22)
 matplotlib.rc('ytick', labelsize=22)
 matplotlib.rcParams.update({'figure.autolayout': True})
-
 
