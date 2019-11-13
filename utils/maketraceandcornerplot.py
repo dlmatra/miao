@@ -23,8 +23,9 @@ print('Changing units for plotting')
 #chain[:,:,0]*=1e6
 chain[:,:,[x for x in range(len(labels)) if labels[x]=='fnu'][0]]*=1e3
 labelparams[[x for x in range(len(labels)) if labels[x]=='fnu'][0]]=r"$F_{\nu_{\rm belt}}$ (mJy)"
-chain[:,:,[x for x in range(len(labels)) if labels[x]=='fnustar'][0]]*=1e6
-labelparams[[x for x in range(len(labels)) if labels[x]=='fnustar'][0]]=r'$F_{\nu_{\ast}}$ (uJy)'
+if star:
+	chain[:,:,[x for x in range(len(labels)) if labels[x]=='fnustar'][0]]*=1e6
+	labelparams[[x for x in range(len(labels)) if labels[x]=='fnustar'][0]]=r'$F_{\nu_{\ast}}$ (uJy)'
 chain[:,:,[x for x in range(len(labels)) if labels[x]=='r'][0]]*=dist
 labelparams[[x for x in range(len(labels)) if labels[x]=='r'][0]]=r"$R$ (au)"
 chain[:,:,[x for x in range(len(labels)) if labels[x]=='sigr'][0]]*=dist*2.0*np.sqrt(2.0*np.log(2.0))
