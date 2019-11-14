@@ -79,10 +79,11 @@ for i in np.arange(nvis):
 	#HERE get frequency back into visibilities, inverting what was done in mstonumpyortxt.py
 	visreswithfreqs = visres.reshape((freqs.shape[0], visres.size/freqs.shape[0]))
 	
-	data_array = np.zeros((2, freqs.shape[0], ant1.shape[0])).astype(complex)
+	#data_array = np.zeros((2, freqs.shape[0], ant1.shape[0])).astype(complex)
 
 	#fill non-flagged data points with residuals
 	if npol>=2:
+		data_array = np.zeros((2, freqs.shape[0], ant1.shape[0])).astype(complex)
 		flags2d = flags[0,:,:]*flags[1,:,:]	
 		data_array[0,np.logical_not(flags2d)] = visres
 		data_array[1,np.logical_not(flags2d)] = visres
@@ -92,6 +93,9 @@ for i in np.arange(nvis):
 		#data_array[1,:] = visres	
 		#data_array[0,flags[0,:,:]] = 0 + 0j
 		#data_array[1,flags[1,:,:]] = 0 + 0j
+	else:
+		data_array = np.zeros((1, freqs.shape[0], ant1.shape[0])).astype(complex)
+		data_array[0,np.logical_not(flags[0,:,:])] = visres
 	
 	#Multiplying the weights by best-fit factor found in modelling
 	weights = tb.getcol("WEIGHT")
@@ -121,16 +125,21 @@ for i in np.arange(nvis):
 	visres.imag=Im_mod
 	visreswithfreqs = visres.reshape((freqs.shape[0], visres.size/freqs.shape[0]))
 
-	data_array = np.zeros((2, freqs.shape[0], ant1.shape[0])).astype(complex)
-
 	#fill non-flagged data points with residuals
-	data_array[0,np.logical_not(flags[0,:,:])] = visres
-	data_array[1,np.logical_not(flags[1,:,:])] = visres
-	#data_array[0,:] = visres
-	#data_array[1,:] = visres
-		
-	data_array[0,flags[0,:,:]] = 0 + 0j
-	data_array[1,flags[1,:,:]] = 0 + 0j
+	if npol>=2:
+		data_array = np.zeros((2, freqs.shape[0], ant1.shape[0])).astype(complex)
+		flags2d = flags[0,:,:]*flags[1,:,:]	
+		data_array[0,np.logical_not(flags2d)] = visres
+		data_array[1,np.logical_not(flags2d)] = visres
+		flags[0,:,:]=flags2d
+		flags[1,:,:]=flags2d
+		#data_array[0,:] = visres
+		#data_array[1,:] = visres	
+		#data_array[0,flags[0,:,:]] = 0 + 0j
+		#data_array[1,flags[1,:,:]] = 0 + 0j
+	else:
+		data_array = np.zeros((1, freqs.shape[0], ant1.shape[0])).astype(complex)
+		data_array[0,np.logical_not(flags[0,:,:])] = visres
 	
 	tb.putcol("DATA", data_array)
 	tb.putcol("WEIGHT", weights)
@@ -149,16 +158,22 @@ for i in np.arange(nvis):
 	visres.imag=Im
 	visreswithfreqs = visres.reshape((freqs.shape[0], visres.size/freqs.shape[0]))
 
-	data_array = np.zeros((2, freqs.shape[0], ant1.shape[0])).astype(complex)
-
 	#fill non-flagged data points with residuals
-	data_array[0,np.logical_not(flags[0,:,:])] = visres
-	data_array[1,np.logical_not(flags[1,:,:])] = visres
-	#data_array[0,:] = visres
-	#data_array[1,:] = visres
-	
-	data_array[0,flags[0,:,:]] = 0 + 0j
-	data_array[1,flags[1,:,:]] = 0 + 0j
+	if npol>=2:
+		data_array = np.zeros((2, freqs.shape[0], ant1.shape[0])).astype(complex)
+		flags2d = flags[0,:,:]*flags[1,:,:]	
+		data_array[0,np.logical_not(flags2d)] = visres
+		data_array[1,np.logical_not(flags2d)] = visres
+		flags[0,:,:]=flags2d
+		flags[1,:,:]=flags2d
+		#data_array[0,:] = visres
+		#data_array[1,:] = visres	
+		#data_array[0,flags[0,:,:]] = 0 + 0j
+		#data_array[1,flags[1,:,:]] = 0 + 0j
+	else:
+		data_array = np.zeros((1, freqs.shape[0], ant1.shape[0])).astype(complex)
+		data_array[0,np.logical_not(flags[0,:,:])] = visres
+
 
 	tb.putcol("DATA", data_array)
 	tb.putcol("WEIGHT", weights)
