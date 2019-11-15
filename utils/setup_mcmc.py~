@@ -392,9 +392,10 @@ def lnpostfn(p, locfiles=None):
 # and ln(prior)=-infinity if any of them falls outside the allowed ranges.
 def lnpriorfn(p):
     for i in range(len(p)):
+        pup=priors_up
         if priors_up[2]=='halfrmid':
-            priors_up[2]=p[1]/2.0
-        if p[i] > priors_up[i] or p[i] < priors_dwn[i]:
+            pup[2]=p[1]/2.0
+        if p[i] > pup[i] or p[i] < priors_dwn[i]:
             return -np.inf
     return 0.0
 
@@ -431,5 +432,6 @@ from multiprocessing import Pool
 # See https://emcee.readthedocs.io/en/latest for a full description of the object, what function/parameters it has, and
 # in general how the MCMC fit works.
 sampler = emcee.EnsembleSampler(nwalkers, ndim, lnpostfn, pool=Pool(), backend=backend)#, pool=Pool())
+
 
 
