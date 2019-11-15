@@ -129,8 +129,8 @@ sizeau=imszarcsec*dist
 #### GRID INPUT TO BE THE SAME AS IN PROBLEM_SETUP CODE (used for temperature grid) ####
 nr=10.0*sigma_init/(np.min(dxyarcsec)) #Make sure to cover entire width of disk at radial step equal to smallest pixel size of any dataset.
 AU  = 1.49598e13     # Astronomical Unit       [cm]
-rmin=np.max([1.0,rmid_init-5.*sigma_init])*dist*AU
-rmax=np.min([np.min(dxyarcsec*nxy)/2.0,rmid_init+5.*sigma_init])*dist*AU
+rmin=np.max([1.0/dist,rmin_arcsec])*dist*AU
+rmax=np.min([np.min(dxyarcsec*nxy)/2.0,rmax_arcsec])*dist*AU
 print('Radial grid of model goes from '+str(rmin/AU)+' au to '+str(rmax/AU)+' au')
 tcsize=20
 ri=(np.arange(nr+1, dtype=float))/nr*(rmax-rmin)+rmin
@@ -431,4 +431,5 @@ from multiprocessing import Pool
 # See https://emcee.readthedocs.io/en/latest for a full description of the object, what function/parameters it has, and
 # in general how the MCMC fit works.
 sampler = emcee.EnsembleSampler(nwalkers, ndim, lnpostfn, pool=Pool(), backend=backend)#, pool=Pool())
+
 
