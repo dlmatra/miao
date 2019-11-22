@@ -39,8 +39,15 @@ dxy, nxy = pickle.load(open(workingdir+'/'+sourcetag+'/calibratedms/pixinfo.npy'
 
 #print(workingdir)
 #Run this within imaging folder
-concatvis=sourcetag+'_calibratedvis_cont_concat.ms'
 if nvis>1:
+    concatvis=sourcetag+'_calibratedvis_cont_concat'
+    if '_rwdat' in vis[0]:
+        concatvis+='_rwdat'
+    if '_model' in vis[0]:
+        concatvis+='_model'
+    if '_res' in vis[0]:
+        concatvis+='_res'
+    concatvis+='.ms'
     concaten=True
     weightfacts=[1.0 for x in np.arange(len(vis))]
     imageconcat=True

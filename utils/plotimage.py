@@ -140,7 +140,7 @@ negcontlevs=np.array(neglevs)*rmscontim
 ax2.contour(1e3*imcontcrop, negcontlevs, linestyles='dashed', colors='white', alpha=0.3, extent=[xvaucontcrop[-1]+np.abs(xvaucontcrop[1]-xvaucontcrop[0])/2.0, xvaucontcrop[0]-np.abs(xvaucontcrop[1]-xvaucontcrop[0])/2.0, yvaucontcrop[0]-np.abs(yvaucontcrop[1]-yvaucontcrop[0])/2.0, yvaucontcrop[-1]+np.abs(yvaucontcrop[1]-yvaucontcrop[0])/2.0])
 	
 #Draw and plot beamsize using class defined at the top of this script
-ae = AnchoredEllipse(ax2.transData, width=3.6e3*abs(header_cont['BMAJ']), height=3.6e3*abs(header_cont['BMIN']), angle=90.0-abs(header_cont['BPA']), loc=3, pad=0.5, borderpad=0.4, frameon=False)
+ae = AnchoredEllipse(ax2.transData, width=3.6e3*abs(header_cont['BMAJ']), height=3.6e3*abs(header_cont['BMIN']), angle=90.0+abs(header_cont['BPA']), loc=3, pad=0.5, borderpad=0.4, frameon=False)
 ax2.add_artist(ae)
 
 #Set up how you want the x and y ticks and labels to look like
