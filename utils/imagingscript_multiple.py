@@ -76,8 +76,11 @@ if imageconcat:
         gridder='standard'
     deconvolver='multiscale'
     #Scales should be roughly [0, n where n*cell~expected syntesized beam size, 3n, 9n, etc.]
-    scales=[0,10,30,90]
-    niter=1
+    scales=[0,50,150,450]
+    if interactive:
+        niter=1
+    else:
+        niter=0
     specmode='mfs'
     if robust=='':
         robusttask=0.5
@@ -88,6 +91,7 @@ if imageconcat:
     os.system('rm -r '+imagename+'.*')
     
     #Run iterative tclean with manual masking
+    print(workingdir+'/'+sourcetag+'/calibratedms/'+concatvis)
     tclean(vis=workingdir+'/'+sourcetag+'/calibratedms/'+concatvis, interactive=interactive, imsize=imsize, cell=cell, weighting=weighting, niter=niter, specmode=specmode, gridder=gridder, deconvolver=deconvolver, scales=scales, imagename=imagename, uvtaper=uvtaper,  robust=robusttask, pblimit=pblimit)
     
     #Export image to FITS
@@ -108,8 +112,11 @@ if imagesingles:
         gridder='standard'
         deconvolver='multiscale'
         #Scales should be roughly [0, n where n*cell~expected syntesized beam size, 3n, 9n, etc.]
-        scales=[0,10,30,90]
-        niter=1
+        scales=[0,50,150,450]
+        if interactive:
+            niter=1
+        else:
+            niter=0
         specmode='mfs'
         if robust=='':
             robusttask=0.5
