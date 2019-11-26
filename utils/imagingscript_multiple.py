@@ -76,7 +76,7 @@ if imageconcat:
         gridder='standard'
     deconvolver='multiscale'
     #Scales should be roughly [0, n where n*cell~expected syntesized beam size, 3n, 9n, etc.]
-    scales=[0,50,150,450]
+    scales=[0,10,30,90]
     if interactive:
         niter=1
     else:
@@ -112,7 +112,7 @@ if imagesingles:
         gridder='standard'
         deconvolver='multiscale'
         #Scales should be roughly [0, n where n*cell~expected syntesized beam size, 3n, 9n, etc.]
-        scales=[0,50,150,450]
+        scales=[0,10,30,90]
         if interactive:
             niter=1
         else:

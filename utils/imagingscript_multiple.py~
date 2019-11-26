@@ -39,8 +39,15 @@ dxy, nxy = pickle.load(open(workingdir+'/'+sourcetag+'/calibratedms/pixinfo.npy'
 
 #print(workingdir)
 #Run this within imaging folder
-concatvis=sourcetag+'_calibratedvis_cont_concat.ms'
 if nvis>1:
+    concatvis=sourcetag+'_calibratedvis_cont_concat'
+    if '_rwdat' in vis[0]:
+        concatvis+='_rwdat'
+    if '_model' in vis[0]:
+        concatvis+='_model'
+    if '_res' in vis[0]:
+        concatvis+='_res'
+    concatvis+='.ms'
     concaten=True
     weightfacts=[1.0 for x in np.arange(len(vis))]
     imageconcat=True
@@ -69,8 +76,11 @@ if imageconcat:
         gridder='standard'
     deconvolver='multiscale'
     #Scales should be roughly [0, n where n*cell~expected syntesized beam size, 3n, 9n, etc.]
-    scales=[0,10,30,90]
-    niter=1
+    scales=[0,50,150,450]
+    if interactive:
+        niter=1
+    else:
+        niter=0
     specmode='mfs'
     if robust=='':
         robusttask=0.5
@@ -81,6 +91,7 @@ if imageconcat:
     os.system('rm -r '+imagename+'.*')
     
     #Run iterative tclean with manual masking
+    print(workingdir+'/'+sourcetag+'/calibratedms/'+concatvis)
     tclean(vis=workingdir+'/'+sourcetag+'/calibratedms/'+concatvis, interactive=interactive, imsize=imsize, cell=cell, weighting=weighting, niter=niter, specmode=specmode, gridder=gridder, deconvolver=deconvolver, scales=scales, imagename=imagename, uvtaper=uvtaper,  robust=robusttask, pblimit=pblimit)
     
     #Export image to FITS
@@ -102,10 +113,15 @@ if imagesingles:
         deconvolver='multiscale'
         #Scales should be roughly [0, n where n*cell~expected syntesized beam size, 3n, 9n, etc.]
         scales=[0,10,30,90]
-        niter=1
+        if interactive:
+            niter=1
+        else:
+            niter=0
         specmode='mfs'
         if robust=='':
             robusttask=0.5
+	else:
+	    robusttask=np.float(robust)
 
         #Remove image if it exists
         os.system('rm -r '+imagename+'.*')
