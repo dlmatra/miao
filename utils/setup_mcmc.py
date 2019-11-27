@@ -67,11 +67,12 @@ else:
         labels.append('deltadec_'+str(i))
         priors_dwn.append(dDec_dwn[i])
         priors_up.append(dDec_up[i])
-        pars_init.append(wtfact[i])
-        labelparams.append(r"w$_"+str(i)+"$")
-        labels.append('w_'+str(i))
-        priors_dwn.append(wtfact_dwn[i])
-        priors_up.append(wtfact_up[i])
+        if want_wtfact:
+            pars_init.append(wtfact[i])
+            labelparams.append(r"w$_"+str(i)+"$")
+            labels.append('w_'+str(i))
+            priors_dwn.append(wtfact_dwn[i])
+            priors_up.append(wtfact_up[i])
     if ngal>=1:
         for i in np.arange(ngal):
             pars_init.append(fbkg[i])
@@ -105,7 +106,7 @@ else:
                 labels.append('ibkg_'+str(i))
                 priors_dwn.append(incgal_dwn[i])
                 priors_up.append(incgal_up[i])
-    pickle.dump([Lstar, dist, imsize, useh, star, nvis, ngal, resolved, pars_init, labels, labelparams, priors_dwn, priors_up], open('parsandpriors.npy', 'wb'), protocol=2)            
+    pickle.dump([Lstar, dist, imsize, useh, star, want_wtfact, nvis, ngal, resolved, pars_init, labels, labelparams, priors_dwn, priors_up], open('parsandpriors.npy', 'wb'), protocol=2)            
     
 rmid_init=pars_init[1]
 sigma_init=pars_init[2]
@@ -303,8 +304,12 @@ def lnpostfn(p, locfiles=None):
         dRArad[i], dDecrad[i] = p[5+countpars]/3600.0*np.pi/180.0, p[6+countpars]/3600.0*np.pi/180.0
         vismodel[i] = sampleImage(np.ascontiguousarray(np.flip(modpad*pbpad[i], axis=0)), dxy, u[i], v[i]
                                   , dRA=dRArad[i], dDec=dDecrad[i])
-        warr[i] = p[7+countpars]
-        countpars+=3
+        if want_wtfact:
+            warr[i] = p[7+countpars]
+            countpars+=3
+        else:
+            warr[i] = wtfact[i]
+            countpars+=2
     
         if star:
             #Then add the star
@@ -432,6 +437,7 @@ from multiprocessing import Pool
 # See https://emcee.readthedocs.io/en/latest for a full description of the object, what function/parameters it has, and
 # in general how the MCMC fit works.
 sampler = emcee.EnsembleSampler(nwalkers, ndim, lnpostfn, pool=Pool(), backend=backend)#, pool=Pool())
+
 
 
 
