@@ -37,7 +37,7 @@ import radmc3dPy
 #Now define array containing all initial parameters, as defined in vismodelling code.
 ## NB DO NOT MODIFY ORDER AS OTHERWISE CODE BELOW WILL NOT RECOGNISE PARAMETERS CORRECTLY
 if postprocessing:
-    Lstar, dist, imsize, useh, star, nvis, ngal, resolved, pars_init, labels, labelparams, priors_dwn, priors_up = pickle.load(open('parsandpriors.npy','rb')) #NB dxy in radians
+    Lstar, dist, imsize, useh, star, want_wtfact, nvis, ngal, resolved, pars_init, labels, labelparams, priors_dwn, priors_up = pickle.load(open('parsandpriors.npy','rb')) #NB dxy in radians
 else:
     pars_init=[fluxdensity, rmid, sigma, incl, posang]
     labelparams=[r"$F_{\nu_{\rm belt}}$ (Jy)", r"$R$ ('')", r"$\sigma R$ ('')", r"$i$ ($^{o}$)", r"PA ($^{o}$)"]
