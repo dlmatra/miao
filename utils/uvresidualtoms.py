@@ -87,12 +87,15 @@ for i in np.arange(nvis):
 		flags2d = flags[0,:,:]*flags[1,:,:]	
 		data_array[0,np.logical_not(flags2d)] = visres
 		data_array[1,np.logical_not(flags2d)] = visres
-		flags[0,:,:]=flags2d
-		flags[1,:,:]=flags2d
+		flagstobeput=np.zeros(flags.shape)
+		flagstobeput[0,:,:]=np.logical_or(flags[0,:,:],flags[1,:,:])
+		flagstobeput[1,:,:]=np.logical_or(flags[0,:,:],flags[1,:,:])
 		#data_array[0,:] = visres
 		#data_array[1,:] = visres	
 		#data_array[0,flags[0,:,:]] = 0 + 0j
 		#data_array[1,flags[1,:,:]] = 0 + 0j
+		tb.putcol("FLAG", flagstobeput)
+
 	else:
 		data_array = np.zeros((1, freqs.shape[0], ant1.shape[0])).astype(complex)
 		data_array[0,np.logical_not(flags[0,:,:])] = visres
@@ -103,7 +106,6 @@ for i in np.arange(nvis):
 		
 	tb.putcol("DATA", data_array)
 	tb.putcol("WEIGHT", weights)
-	tb.putcol("FLAG", flags)
 
 	# if the MS had a corrected column, remove it (this happens with MS's created with simobserve")
 	if ("CORRECTED_DATA" in tb.colnames()):
@@ -131,12 +133,14 @@ for i in np.arange(nvis):
 		flags2d = flags[0,:,:]*flags[1,:,:]	
 		data_array[0,np.logical_not(flags2d)] = visres
 		data_array[1,np.logical_not(flags2d)] = visres
-		flags[0,:,:]=flags2d
-		flags[1,:,:]=flags2d
+		flagstobeput=np.zeros(flags.shape)
+		flagstobeput[0,:,:]=np.logical_or(flags[0,:,:],flags[1,:,:])
+		flagstobeput[1,:,:]=np.logical_or(flags[0,:,:],flags[1,:,:])
 		#data_array[0,:] = visres
 		#data_array[1,:] = visres	
 		#data_array[0,flags[0,:,:]] = 0 + 0j
 		#data_array[1,flags[1,:,:]] = 0 + 0j
+		tb.putcol("FLAG", flagstobeput)
 	else:
 		data_array = np.zeros((1, freqs.shape[0], ant1.shape[0])).astype(complex)
 		data_array[0,np.logical_not(flags[0,:,:])] = visres
@@ -164,12 +168,14 @@ for i in np.arange(nvis):
 		flags2d = flags[0,:,:]*flags[1,:,:]	
 		data_array[0,np.logical_not(flags2d)] = visres
 		data_array[1,np.logical_not(flags2d)] = visres
-		flags[0,:,:]=flags2d
-		flags[1,:,:]=flags2d
+		flagstobeput=np.zeros(flags.shape)
+		flagstobeput[0,:,:]=np.logical_or(flags[0,:,:],flags[1,:,:])
+		flagstobeput[1,:,:]=np.logical_or(flags[0,:,:],flags[1,:,:])
 		#data_array[0,:] = visres
 		#data_array[1,:] = visres	
 		#data_array[0,flags[0,:,:]] = 0 + 0j
 		#data_array[1,flags[1,:,:]] = 0 + 0j
+		tb.putcol("FLAG", flagstobeput)
 	else:
 		data_array = np.zeros((1, freqs.shape[0], ant1.shape[0])).astype(complex)
 		data_array[0,np.logical_not(flags[0,:,:])] = visres
@@ -180,4 +186,5 @@ for i in np.arange(nvis):
 	tb.flush()
 	tb.close()
 print("Done! _res, _model, and _rwdat CASA MS files have been produced and placed in the ../../calibratedms directory")
+
 
