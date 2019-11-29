@@ -84,7 +84,7 @@ for i in np.arange(nvis):
 	#fill non-flagged data points with residuals
 	if npol>=2:
 		data_array = np.zeros((2, freqs.shape[0], ant1.shape[0])).astype(complex)
-		flags2d = flags[0,:,:]*flags[1,:,:]	
+		flags2d = np.logical_or(flags[0,:,:],flags[1,:,:])
 		data_array[0,np.logical_not(flags2d)] = visres
 		data_array[1,np.logical_not(flags2d)] = visres
 		flagstobeput=np.zeros(flags.shape)
@@ -130,7 +130,7 @@ for i in np.arange(nvis):
 	#fill non-flagged data points with residuals
 	if npol>=2:
 		data_array = np.zeros((2, freqs.shape[0], ant1.shape[0])).astype(complex)
-		flags2d = flags[0,:,:]*flags[1,:,:]	
+		flags2d = np.logical_or(flags[0,:,:],flags[1,:,:])
 		data_array[0,np.logical_not(flags2d)] = visres
 		data_array[1,np.logical_not(flags2d)] = visres
 		flagstobeput=np.zeros(flags.shape)
@@ -165,7 +165,7 @@ for i in np.arange(nvis):
 	#fill non-flagged data points with residuals
 	if npol>=2:
 		data_array = np.zeros((2, freqs.shape[0], ant1.shape[0])).astype(complex)
-		flags2d = flags[0,:,:]*flags[1,:,:]	
+		flags2d = np.logical_or(flags[0,:,:],flags[1,:,:])
 		data_array[0,np.logical_not(flags2d)] = visres
 		data_array[1,np.logical_not(flags2d)] = visres
 		flagstobeput=np.zeros(flags.shape)
@@ -186,5 +186,6 @@ for i in np.arange(nvis):
 	tb.flush()
 	tb.close()
 print("Done! _res, _model, and _rwdat CASA MS files have been produced and placed in the ../../calibratedms directory")
+
 
 
