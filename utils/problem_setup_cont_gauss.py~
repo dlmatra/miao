@@ -35,6 +35,12 @@ def problem_setup(theta):
     ####################################################################################
 
     #Radial
+    if (rmid-2*sigma)<=1.0:
+        print('NOTE: Model surface density is significant all the way to zero - but model grid only goes inward to 1 au')
+    else:
+        if rmin>(rmid*AU-2*sigma*AU):
+            print('WARNING - Grid may not go inward far enough. Min radius set to '+str(rmin/AU)+' but inner 2sigma of Gaussian ring is '+str(rmid-2*sigma))
+            
     if rmax<(rmid*AU+2*sigma*AU):
         print('WARNING - Grid may not be big enough. Max radius set to '+str(rmax/AU)+' but outer 2sigma of Gaussian ring is '+str(rmid+2*sigma))
     ri  = (np.arange(nr+1, dtype=float))/nr*(rmax-rmin)+rmin
@@ -125,4 +131,5 @@ def problem_setup(theta):
     
 
     return 0.0
+
 

@@ -35,7 +35,7 @@ def problem_setup(theta):
     ####################################################################################
 
     #Radial
-    if (rmid*AU-2*sigma*AU)<=1.0:
+    if (rmid-2*sigma)<=1.0:
         print('NOTE: Model surface density is significant all the way to zero - but model grid only goes inward to 1 au')
     else:
         if rmin>(rmid*AU-2*sigma*AU):
