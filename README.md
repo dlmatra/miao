@@ -15,7 +15,7 @@ and then start the Jupyter Notebook kernel: <br>
 
 
 **NOTE**:
-This has been tested on single-dataset analysis, and not fully on multiple-dataset analysis. **Use at own risk!**
+This has been tested on single-dataset analysis, and not fully on multiple-dataset analysis (though it *should* work). **Use at own risk!** Feel free to email me or create an issue if you have any problems
 
 ## Requirements
 
