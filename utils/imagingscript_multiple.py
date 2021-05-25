@@ -78,7 +78,7 @@ if imageconcat:
     #Scales should be roughly [0, n where n*cell~expected syntesized beam size, 3n, 9n, etc.]
     scales=[0,10,30,90]
     if interactive:
-        niter=1
+        niter=1000000000
     else:
         niter=0
     specmode='mfs'
@@ -114,7 +114,7 @@ if imagesingles:
         #Scales should be roughly [0, n where n*cell~expected syntesized beam size, 3n, 9n, etc.]
         scales=[0,10,30,90]
         if interactive:
-            niter=1
+            niter=10000000000
         else:
             niter=0
         specmode='mfs'
