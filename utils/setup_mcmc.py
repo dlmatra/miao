@@ -354,24 +354,23 @@ nsteps = 10    	    # total number of steps to run the MCMC for.
 pos = [p0 + np.asarray([0.1]*ndim)*np.asarray(p0)*np.random.randn(ndim) for i in range(nwalkers)]
 
 
-# Define 'backend' which is practically a file which holds the result of the MCMC computation AS IT IS RUNNING.
-# This ensures we can recover the result not only in the future, but also if something goes wrong and the MCMC crashes
-backend=emcee.backends.HDFBackend(backendaddress)
-# This command wipes what's currently stored in the backend opened above - so make sure you don't use this command on a backend 
-# containing something important!
-if newbackend:
-    backend.reset(nwalkers,ndim)
-
-#import the Pool function which allows the computation to be distributed amongst different cores of the machine we are running on,
-#saving a considerable amount of time.
-#Usage of different cores can be seen through the terminal command 'mpstat -P ALL 1' while the MCMC is running.
-from multiprocessing import Pool
-
-# Define object of EnsembleSampler class from emcee package. Basically this is the object the computation gets run onto.
-# See https://emcee.readthedocs.io/en/latest for a full description of the object, what function/parameters it has, and
-# in general how the MCMC fit works.
-sampler = emcee.EnsembleSampler(nwalkers, ndim, lnpostfn, pool=Pool(), backend=backend)#, pool=Pool())
-
+if __name__ == "__main__":
+    __spec__ = None
+    #import the Pool function which allows the computation to be distributed amongst different cores of the machine we are running on,
+    #saving a considerable amount of time.
+    #Usage of different cores can be seen through the terminal command 'mpstat -P ALL 1' while the MCMC is running.
+    from multiprocessing import Pool
+    # Define 'backend' which is practically a file which holds the result of the MCMC computation AS IT IS RUNNING.
+    # This ensures we can recover the result not only in the future, but also if something goes wrong and the MCMC crashes
+    backend=emcee.backends.HDFBackend(backendaddress)
+    # This command wipes what's currently stored in the backend opened above - so make sure you don't use this command on a backend 
+    # containing something important!
+    if newbackend:
+        backend.reset(nwalkers,ndim)
+    # Define object of EnsembleSampler class from emcee package. Basically this is the object the computation gets run onto.
+    # See https://emcee.readthedocs.io/en/latest for a full description of the object, what function/parameters it has, and
+    # in general how the MCMC fit works.
+    sampler = emcee.EnsembleSampler(nwalkers, ndim, lnpostfn, backend=backend, pool=Pool())
 
 
 
