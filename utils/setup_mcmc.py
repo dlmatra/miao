@@ -16,7 +16,11 @@ from galario.double import chi2Image, sampleImage, threads, get_image_size, swee
 threads(1)
 
 #backendaddress=np.load('./backendaddress.npy')
-backendaddress = pickle.load(open('backendaddress.npy','rb'))
+miaopath, casapath, sourcetag, workingdir, vis, nvis = pickle.load(open('../dirvises.npy','rb'))
+newbackend, backendaddress = pickle.load(open('backendoptions.npy','rb'))
+rmin_arcsec, rmax_arcsec, nr = pickle.load(open('gridparams.npy','rb'))
+
+
 
 c = 299792458.0
 
@@ -34,80 +38,9 @@ import emcee
 os.sys.path.append(miaopath+'/radmc-3d/version_0.41/python')
 import radmc3dPy
 
-#Now define array containing all initial parameters, as defined in vismodelling code.
-## NB DO NOT MODIFY ORDER AS OTHERWISE CODE BELOW WILL NOT RECOGNISE PARAMETERS CORRECTLY
-if postprocessing:
-    Lstar, dist, imsize, useh, star, want_wtfact, nvis, ngal, resolved, pars_init, labels, labelparams, priors_dwn, priors_up = pickle.load(open('parsandpriors.npy','rb')) #NB dxy in radians
-else:
-    pars_init=[fluxdensity, rmid, sigma, incl, posang]
-    labelparams=[r"$F_{\nu_{\rm belt}}$ (Jy)", r"$R$ ('')", r"$\sigma R$ ('')", r"$i$ ($^{o}$)", r"PA ($^{o}$)"]
-    labels=['fnu', 'r', 'sigr', 'i', 'pa']
-    priors_dwn=[fluxdensity_dwn, rmid_dwn, sigma_dwn, incl_dwn, posang_dwn]
-    priors_up=[fluxdensity_up, rmid_up, sigma_up, incl_up, posang_up]
-    if useh:
-        pars_init.append(h)
-        labelparams.append(r'$h$')
-        labels.append('h')
-        priors_dwn.append(h_dwn)
-        priors_up.append(h_up)
-    if star:
-        pars_init.append(fstar)
-        labelparams.append(r'$F_{\nu_{\ast}}$ (Jy)')
-        labels.append('fnustar')
-        priors_dwn.append(fstar_dwn)
-        priors_up.append(fstar_up)
-    for i in np.arange(nvis):
-        pars_init.append(dRA[i])
-        labelparams.append(r"$\Delta$RA$_"+str(i)+"$ ('')")
-        labels.append('deltara_'+str(i))
-        priors_dwn.append(dRA_dwn[i])
-        priors_up.append(dRA_up[i])
-        pars_init.append(dDec[i])
-        labelparams.append(r"$\Delta$Dec$_"+str(i)+"$ ('')")
-        labels.append('deltadec_'+str(i))
-        priors_dwn.append(dDec_dwn[i])
-        priors_up.append(dDec_up[i])
-        if want_wtfact:
-            pars_init.append(wtfact[i])
-            labelparams.append(r"w$_"+str(i)+"$")
-            labels.append('w_'+str(i))
-            priors_dwn.append(wtfact_dwn[i])
-            priors_up.append(wtfact_up[i])
-    if ngal>=1:
-        for i in np.arange(ngal):
-            pars_init.append(fbkg[i])
-            labelparams.append(r"$F_{\rm bkg"+str(i)+"}$ (mJy)")
-            labels.append('fbkg_'+str(i))
-            priors_dwn.append(fbkg_dwn[i])
-            priors_up.append(fbkg_up[i])
-            pars_init.append(dRAbkg[i])
-            labelparams.append(r"$\Delta$RA$_{\rm bkg"+str(i)+"}$ ('')")
-            labels.append('deltarabkg_'+str(i))
-            priors_dwn.append(dRAbkg_dwn[i])
-            priors_up.append(dRAbkg_up[i])
-            pars_init.append(dDecbkg[i])
-            labelparams.append(r"$\Delta$Dec$_{\rm bkg"+str(i)+"}$ ('')")
-            labels.append('deltadecbkg_'+str(i))
-            priors_dwn.append(dDecbkg_dwn[i])
-            priors_up.append(dDecbkg_up[i])
-            if resolved[i]:
-                pars_init.append(sigmagal[i])
-                labelparams.append(r"$\sigma_{\rm bkg"+str(i)+"}$ ('')")
-                labels.append('sigmabkg_'+str(i))
-                priors_dwn.append(sigmagal_dwn[i])
-                priors_up.append(sigmagal_up[i])
-                pars_init.append(PAgal[i])
-                labelparams.append(r"$PA_{\rm bkg"+str(i)+"}$ ($^{o}$)")
-                labels.append('pabkg_'+str(i))
-                priors_dwn.append(PAgal_dwn[i])
-                priors_up.append(PAgal_up[i])
-                pars_init.append(incgal[i])
-                labelparams.append(r"$i_{\rm bkg"+str(i)+"}$ ($^{o}$)")
-                labels.append('ibkg_'+str(i))
-                priors_dwn.append(incgal_dwn[i])
-                priors_up.append(incgal_up[i])
-    pickle.dump([Lstar, dist, imsize, useh, star, want_wtfact, nvis, ngal, resolved, pars_init, labels, labelparams, priors_dwn, priors_up], open('parsandpriors.npy', 'wb'), protocol=2)            
-    
+
+#Import parameters, and initial values defined and pickled in vismodelling notebook
+Lstar, dist, imsize, useh, star, want_wtfact, nvis, ngal, resolved, pars_init, labels, labelparams, priors_dwn, priors_up = pickle.load(open('parsandpriors.npy','rb')) #NB dxy in radians    
 rmid_init=pars_init[1]
 sigma_init=pars_init[2]
 
@@ -128,11 +61,12 @@ imszarcsec=imsize
 sizeau=imszarcsec*dist
 
 #### GRID INPUT TO BE THE SAME AS IN PROBLEM_SETUP CODE (used for temperature grid) ####
-nr=10.0*sigma_init/(np.min(dxyarcsec)) #Make sure to cover entire width of disk at radial step equal to smallest pixel size of any dataset.
+#nr=10.0*sigma_init/(np.min(dxyarcsec)) #Make sure to cover entire width of disk at radial step equal to smallest pixel size of any dataset.
+#from previous version; nr is now defined externally in vismodelling notebook, and imported above.
 AU  = 1.49598e13     # Astronomical Unit       [cm]
-rmin=np.max([1.0/dist,rmin_arcsec])*dist*AU
-rmax=np.min([np.min(dxyarcsec*nxy)/2.0,rmax_arcsec])*dist*AU
-print('Radial grid of model goes from '+str(rmin/AU)+' au to '+str(rmax/AU)+' au')
+rmin=np.max([1.0/dist,rmin_arcsec])*dist*AU #safety net: rmin of grid is the greater of 1 au and rmin_arcsec defined in vismodelling notebook
+rmax=np.min([np.min(dxyarcsec*nxy)/2.0,rmax_arcsec])*dist*AU #safety net: rmax of grid is the smaller of the image size created by radmc and rmax_arcsec defined in vismodelling notebook
+print('Radial grid of model goes from '+str(rmin/AU)+' au to '+str(rmax/AU)+' au, with '+str(nr)+'radial steps, and step size of '+str((rmax-rmin)/nr/AU/dist)+'arcsec'
 tcsize=20
 ri=(np.arange(nr+1, dtype=float))/nr*(rmax-rmin)+rmin
 dr=(np.subtract(ri[1:],ri[:-1]))
