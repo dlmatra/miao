@@ -66,7 +66,7 @@ sizeau=imszarcsec*dist
 AU  = 1.49598e13     # Astronomical Unit       [cm]
 rmin=np.max([1.0/dist,rmin_arcsec])*dist*AU #safety net: rmin of grid is the greater of 1 au and rmin_arcsec defined in vismodelling notebook
 rmax=np.min([np.min(dxyarcsec*nxy)/2.0,rmax_arcsec])*dist*AU #safety net: rmax of grid is the smaller of the image size created by radmc and rmax_arcsec defined in vismodelling notebook
-print('Radial grid of model goes from '+str(rmin/AU)+' au to '+str(rmax/AU)+' au, with '+str(nr)+'radial steps, and step size of '+str((rmax-rmin)/nr/AU/dist)+'arcsec'
+print('Radial grid of model goes from '+str(rmin/AU)+' au to '+str(rmax/AU)+' au, with '+str(nr)+' radial steps, and step size of '+str((rmax-rmin)/nr/AU/dist)+' arcsec')
 tcsize=20
 ri=(np.arange(nr+1, dtype=float))/nr*(rmax-rmin)+rmin
 dr=(np.subtract(ri[1:],ri[:-1]))
