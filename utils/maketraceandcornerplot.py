@@ -1,3 +1,10 @@
+import matplotlib
+import pickle
+import numpy as np
+import matplotlib.pyplot as pl
+import os
+import corner
+
 #Nice fonts
 font={'family':'Times New Roman', 'size':24}	
 matplotlib.rc('font', **font)
@@ -10,10 +17,10 @@ matplotlib.rc('xtick', labelsize=22)
 matplotlib.rc('ytick', labelsize=22)
 matplotlib.rcParams.update({'figure.autolayout': True})
 
+burnin, cornername, traceplotname, chain = pickle.load(open('./traceandcornerinputs.npy','rb'))
+Lstar, dist, imsize, useh, star, want_wtfact, nvis, ngal, resolved, pars_init, labels, labelparams, priors_dwn, priors_up = pickle.load(open('parsandpriors.npy','rb')) #NB dxy in radians
 
 burn=burnin
-
-
 nwalkers=chain.shape[1]
 ndim=chain.shape[2]
 #Check that the two names below roughly match for consistency
@@ -136,5 +143,3 @@ matplotlib.rc('ytick.minor', width=2, size=4)
 matplotlib.rc('xtick', labelsize=22)
 matplotlib.rc('ytick', labelsize=22)
 matplotlib.rcParams.update({'figure.autolayout': True})
-
-
