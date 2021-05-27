@@ -14,3 +14,4 @@ jupyter_core==4.6.3
 jupyterlab==2.2.6
 jupyterlab_pygments==0.1.2
 jupyterlab_server==1.2.0
+tqdm==4.50.2
