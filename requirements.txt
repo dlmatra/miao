@@ -1,0 +1,16 @@
+astropy==4.0.2
+corner==2.2.1
+emcee==3.0.2
+matplotlib==3.3.2
+numpy==1.19.2
+scipy==1.5.2
+galario==1.2.2
+python==3.8.5
+ipython==7.19.0
+jupyter==1.0.0
+jupyter_client==6.1.7
+jupyter_console==6.2.0
+jupyter_core==4.6.3
+jupyterlab==2.2.6
+jupyterlab_pygments==0.1.2
+jupyterlab_server==1.2.0
