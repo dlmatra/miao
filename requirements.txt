@@ -6,7 +6,7 @@ numpy==1.19.2
 scipy==1.5.2
 galario==1.2.2
 python==3.8.5
-ipython==7.19.0
+ipython==7.31.1
 jupyter==1.0.0
 jupyter_client==6.1.7
 jupyter_console==6.2.0
