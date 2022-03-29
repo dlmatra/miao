@@ -26,13 +26,13 @@ import os
 
 #Read in imaging parameters
 sourcetag,workingdir,vis,nvis,mosaic,phasecenter,weighting,robust,uvtaper,interactive = pickle.load(open('./imagepars.npy','rb'))
-sourcetag=sourcetag.encode('ascii')
-workingdir=workingdir.encode('ascii')
-vis=[x.encode('ascii') for x in vis]
-phasecenter=phasecenter.encode('ascii')
-weighting=weighting.encode('ascii')
-robust=robust.encode('ascii')
-uvtaper=[x.encode('ascii') for x in uvtaper]
+#sourcetag=sourcetag.encode('ascii')
+#workingdir=workingdir.encode('ascii')
+#vis=[x.encode('ascii') for x in vis]
+#phasecenter=phasecenter.encode('ascii')
+#weighting=weighting.encode('ascii')
+#robust=robust.encode('ascii')
+#uvtaper=[x.encode('ascii') for x in uvtaper]
 
 #Read in pixel parameters
 dxy, nxy = pickle.load(open(workingdir+'/'+sourcetag+'/calibratedms/pixinfo.npy','rb'))
@@ -72,13 +72,15 @@ if imageconcat:
     pblimit=1e-5
     if mosaic:
         gridder='mosaic'
+	phasecenteractual=phasecenter
     else:
         gridder='standard'
+	phasecenteractual=''
     deconvolver='multiscale'
     #Scales should be roughly [0, n where n*cell~expected syntesized beam size, 3n, 9n, etc.]
     scales=[0,10,30,90]
     if interactive:
-        niter=1000000000
+        niter=1000
     else:
         niter=0
     specmode='mfs'
@@ -92,7 +94,7 @@ if imageconcat:
     
     #Run iterative tclean with manual masking
     print(workingdir+'/'+sourcetag+'/calibratedms/'+concatvis)
-    tclean(vis=workingdir+'/'+sourcetag+'/calibratedms/'+concatvis, interactive=interactive, imsize=imsize, cell=cell, weighting=weighting, niter=niter, specmode=specmode, gridder=gridder, deconvolver=deconvolver, scales=scales, imagename=imagename, uvtaper=uvtaper,  robust=robusttask, pblimit=pblimit)
+    tclean(vis=workingdir+'/'+sourcetag+'/calibratedms/'+concatvis, interactive=interactive, imsize=imsize, cell=cell, weighting=weighting, niter=niter, specmode=specmode, gridder=gridder, deconvolver=deconvolver, scales=scales, imagename=imagename, uvtaper=uvtaper,  robust=robusttask, pblimit=pblimit, phasecenter=phasecenteractual)
     
     #Export image to FITS
     exportfits(imagename=imagename+'.image', fitsimage=imagename+'.fits', overwrite=True)
@@ -109,12 +111,17 @@ if imagesingles:
         imsize=[nxy,nxy]
         cell=[str(dxy*180.0/np.pi*3600.0)+'arcsec']
         pblimit=1e-5
-        gridder='standard'
+    	if mosaic:
+        	gridder='standard'
+		phasecenteractual=phasecenter
+    	else:
+        	gridder='standard'
+		phasecenteractual=''
         deconvolver='multiscale'
         #Scales should be roughly [0, n where n*cell~expected syntesized beam size, 3n, 9n, etc.]
         scales=[0,10,30,90]
         if interactive:
-            niter=10000000000
+            niter=1000
         else:
             niter=0
         specmode='mfs'
@@ -130,7 +137,7 @@ if imagesingles:
         #print(workingdir+'/'+sourcetag+'/'+'calibratedms/'+vis[i])
         tclean(vis=workingdir+'/'+sourcetag+'/'+'calibratedms/'+vis[i], interactive=interactive, imsize=imsize, cell=cell,
                weighting=str(weighting), niter=niter, specmode=specmode, gridder=gridder, deconvolver=deconvolver, scales=scales, 
-               imagename=str(imagename), uvtaper=uvtaper,  robust=robusttask)
+               imagename=str(imagename), uvtaper=uvtaper,  robust=robusttask, pblimit=pblimit, phasecenter=phasecenteractual)
 
         #Export image to FITS
         exportfits(imagename=imagename+'.image', fitsimage=imagename+'.fits', overwrite=True)
