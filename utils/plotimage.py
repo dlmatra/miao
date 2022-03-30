@@ -121,6 +121,10 @@ ax2=fig.add_subplot(111)
 m2=ax2.imshow(1e3*imcontcrop, origin='lower', cmap='inferno', extent=[xvaucontcrop[-1]+np.abs(xvaucontcrop[1]-xvaucontcrop[0])/2.0, xvaucontcrop[0]-np.abs(xvaucontcrop[1]-xvaucontcrop[0])/2.0, yvaucontcrop[0]-np.abs(yvaucontcrop[1]-
 yvaucontcrop[0])/2.0, yvaucontcrop[-1]+np.abs(yvaucontcrop[1]-yvaucontcrop[0])/2.0], interpolation='bicubic', vmax=vmax)
 
+#Here make -infs black in case of mosaics, and saturated regions white, which works for inferno color scale:
+m2.cmap.set_bad('black')
+m2.cmap.set_over('white')
+
 # Below is a bunch of customizable commands to draw a nice colorbar.
 divider=make_axes_locatable(ax2)
 cax2=divider.append_axes('top', size='5%', pad=0.05)
