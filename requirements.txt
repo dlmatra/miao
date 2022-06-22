@@ -2,7 +2,7 @@ astropy==4.0.2
 corner==2.2.1
 emcee==3.0.2
 matplotlib==3.3.2
-numpy==1.19.2
+numpy==1.22.0
 scipy==1.5.2
 galario==1.2.2
 python==3.8.5
