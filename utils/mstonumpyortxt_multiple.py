@@ -11,7 +11,9 @@ import numpy as np
 import pickle
 import os
 sourcetag,workingdir,vis,nvis,mosaic,phasecenter,weighting,robust,uvtaper,interactive = pickle.load(open('../imaging/imagepars.npy','rb'))
-vis=[x.encode('ascii') for x in vis]
+vis=[x for x in vis]
+
+import casatools as casac
 
 tb = casac.table()
 ms = casac.ms()
@@ -41,8 +43,8 @@ for ii in np.arange(len(filename)):
 	ant2    = tb.getcol("ANTENNA2")
 	tb.close()
 	if np.any(flags):
-		print "Note: some of the data is FLAGGED"
-	print "Found data with "+str(data.shape[-1])+" uv points per channel"
+		print("Note: some of the data is FLAGGED")
+	print("Found data with "+str(data.shape[-1])+" uv points per channel")
 
 
 	#Use CASA ms tools to get the channel/spw info
@@ -51,17 +53,17 @@ for ii in np.arange(len(filename)):
 	nchan = spwstuff["0"]["NumChan"]
 	npol = spwstuff["0"]["NumCorr"]
 	ms.close()
-	print "with "+str(nchan)+" channels per SPW and "+str(npol)+" polarizations,"
+	print("with "+str(nchan)+" channels per SPW and "+str(npol)+" polarizations,")
 
 	#Use CASA table tools to get frequencies, which are needed to calculate u-v points from baseline lengths
 	tb.open(filename[ii]+"/SPECTRAL_WINDOW")
 	freqs = tb.getcol("CHAN_FREQ")
 	rfreq = tb.getcol("REF_FREQUENCY")
 	tb.close()
-	print str(freqs.shape[1])+" SPWs and Channel 0 frequency of 1st SPW of "+str(rfreq[0]/1e9)+" GHz"
-	print "corresponding to "+str(2.9979e8/rfreq[0]*1e3)+" mm"
+	print(str(freqs.shape[1])+" SPWs and Channel 0 frequency of 1st SPW of "+str(rfreq[0]/1e9)+" GHz")
+	print("corresponding to "+str(2.9979e8/rfreq[0]*1e3)+" mm")
 
-	print "Datasets has baselines between "+str(np.min(np.sqrt(uvw[0,:]**2.0+uvw[1,:]**2.0)))+" and "+str(np.max(np.sqrt(uvw[0,:]**2.0+uvw[1,:]**2.0)))+" m"  
+	print("Datasets has baselines between "+str(np.min(np.sqrt(uvw[0,:]**2.0+uvw[1,:]**2.0)))+" and "+str(np.max(np.sqrt(uvw[0,:]**2.0+uvw[1,:]**2.0)))+" m")
 
 	#Initialize u and v arrays (coordinates in Fourier space)
 	uu=np.zeros((freqs.shape[0],uvw[0,:].size))
