@@ -11,7 +11,7 @@ jupyter==1.0.0
 jupyter_client==6.1.7
 jupyter_console==6.2.0
 jupyter_core==4.6.3
-jupyterlab==2.2.6
+jupyterlab==2.2.10
 jupyterlab_pygments==0.1.2
 jupyterlab_server==1.2.0
 tqdm==4.50.2
